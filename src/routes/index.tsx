@@ -5,6 +5,7 @@ import AdminRoutes from "./admin";
 import TeacherRoutes from "./teacher";
 import StudentRoutes from "./student";
 import App from "../App";
+import ScanPage from "../pages/scanning";
 
 function ErrorBoundary() {
     const error = useRouteError();
@@ -40,6 +41,7 @@ const routes = createBrowserRouter(
     createRoutesFromElements(
         <Route errorElement={<ErrorBoundary/>}>
             {RouteRedirect()}
+            <Route path="/scan" element={<ScanPage/>}/>
             <Route path="*" element={<>Not Found</>}/>
         </Route>
     )
