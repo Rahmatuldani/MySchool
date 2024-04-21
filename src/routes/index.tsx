@@ -17,7 +17,7 @@ function ErrorBoundary() {
 }
 
 function RouteRedirect() {
-    const user: string | null = null;
+    const user: string | null = 'Administrator';
     if (!user) {
         return <>
             <Route index element={<App/>}/>
