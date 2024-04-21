@@ -1,10 +1,7 @@
-import config from "./config/config";
+import { Navigate } from "react-router-dom";
 
 function App() {
-  document.title = config.title
-  return (
-    <>App Page</>
-  );
+  return <Navigate to={'/login'} replace/>;
 }
 
 export default App;
