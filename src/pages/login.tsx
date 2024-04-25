@@ -1,16 +1,42 @@
 import { Button, Card, Col, Container, Form, Row, Spinner } from "react-bootstrap";
-import { LoginType } from "../store/auth/types";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { LoginType } from "../store/auth/types";
+import { LoginFunction } from "../store/auth/action";
+import { UserType } from "../store/user/types";
+import { useDispatch, useSelector } from "react-redux";
+import { selectUsers } from "../store/user/selector";
+import { Dispatch } from "redux";
+import Alert from "../utils/alert";
+import { Navigate, NavigateFunction, useNavigate } from "react-router-dom";
+import { selectAuth, selectAuthIsLoading } from "../store/auth/selector";
 
 function Login() {
     document.body.className = 'bg-primary';
-    const loading: boolean = false;
+    const user: UserType | null = useSelector(selectAuth);
+    const users: UserType[] = useSelector(selectUsers);
+    const navigate: NavigateFunction = useNavigate();
+    const loading: boolean = useSelector(selectAuthIsLoading);
     const { handleSubmit, control, formState: { errors } } = useForm<LoginType>();
-    
+    const dispatch: Dispatch = useDispatch();
+
     const FormSubmit: SubmitHandler<LoginType> = function(data) {
-        console.log(data);
+        LoginFunction(dispatch, users, data)
+            .then(() => {
+                navigate('/');
+            })
+            .catch((error: string) => {
+                Alert({
+                    title: 'Error',
+                    text: error,
+                    icon: 'error'
+                });
+            });
     };
-    
+
+    if (user) {
+        return <Navigate to='/' replace/>;
+    }
+
     return (
         <div id='layoutAuthentication'>
             <div id='layoutAuthentication_content'>
@@ -37,7 +63,7 @@ function Login() {
                                                 render={({ field }) => (
                                                     <Form.Group className='mb-2' id="inputId">
                                                         <Form.Label className='small mb-1'>NIP/NISN</Form.Label>
-                                                        <Form.Control placeholder='Enter NIP/NISN' {...field}/>
+                                                        <Form.Control placeholder='Enter NIP/NISN' {...field} />
                                                         {errors._id && <span className='small text-danger'>{errors._id.message}</span>}
                                                     </Form.Group>
                                                 )}
@@ -48,13 +74,13 @@ function Login() {
                                                 name='password'
                                                 rules={{
                                                     required: 'Password is required',
-                                                    minLength: {value: 6, message: 'Password length min 6 character'}
+                                                    minLength: { value: 6, message: 'Password length min 6 character' }
                                                 }}
                                                 defaultValue=''
                                                 render={({ field }) => (
                                                     <Form.Group className='mb-2'>
                                                         <Form.Label className='small mb-1'>Password</Form.Label>
-                                                        <Form.Control type='password' placeholder='Enter password' {...field}/>
+                                                        <Form.Control type='password' placeholder='Enter password' {...field} />
                                                         {errors.password && <span className='small text-danger'>{errors.password.message}</span>}
                                                     </Form.Group>
                                                 )}
@@ -63,7 +89,7 @@ function Login() {
                                             <Form.Group className='d-flex align-items-center justify-content-end mt-4 mb-0'>
                                                 <Button type='submit' variant='primary' disabled={loading}>
                                                     {loading ? (
-                                                        <Spinner animation='border' size='sm'/>
+                                                        <Spinner animation='border' size='sm' />
                                                     ) : 'Submit'}
                                                 </Button>
                                             </Form.Group>
@@ -80,11 +106,11 @@ function Login() {
                     <Container fluid>
                         <Row>
                             <Col md={6} className='small'>
-                                    Copyright &#xA9; Hospital App 2024
+                                Copyright &#xA9; Hospital App 2024
                             </Col>
                             <Col md={6} className='text-md-right small'>
                                 <a href='#!'>Privacy Policy</a>
-                                    &#xB7;
+                                &#xB7;
                                 <a href='#!'>Terms &amp; Conditions</a>
                             </Col>
                         </Row>

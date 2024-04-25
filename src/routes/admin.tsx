@@ -6,7 +6,7 @@ const Dashboard = React.lazy(() => import('../pages/admin/dashboard'));
 
 function AdminRoutes() {
     return (
-        <Route path='/' element={<AdminLayout/>}>
+        <Route path="/" element={<AdminLayout/>}>
             <Route index element={<Dashboard/>}/>
         </Route>
     );

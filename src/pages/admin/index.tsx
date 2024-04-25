@@ -1,20 +1,27 @@
 import React from "react";
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import LoadingComponent from "../../components/loading";
 import config from "../../config/config";
+import { UserType } from "../../store/user/types";
+import { useSelector } from "react-redux";
+import { selectAuth } from "../../store/auth/selector";
 
 const NavbarComponent = React.lazy(() => import("../../components/navbar"));
 const SidebarComponent = React.lazy(() => import("../../components/sidebar"));
 const SidebarItems = React.lazy(() => import("./sidebar"));
 
 function AdminLayout() {
-    const role = 'Administrator';
+    document.body.className = 'nav-fixed';
+    const auth: UserType | null = useSelector(selectAuth);
+    if (!auth) {
+        return <Navigate to={'/login'} replace/>;
+    }
     return (
         <React.Suspense fallback={<LoadingComponent />}>
             <NavbarComponent />
             <div id="layoutSidenav">
                 <div id="layoutSidenav_nav">
-                    <SidebarComponent items={<SidebarItems />} role={role} />
+                    <SidebarComponent items={<SidebarItems />} role={auth.role} />
                 </div>
                 <div id="layoutSidenav_content">
                     <React.Suspense fallback={<LoadingComponent />}>
@@ -36,7 +43,6 @@ function AdminLayout() {
                     </footer>
                 </div>
             </div>
-            <Outlet />
         </React.Suspense>
     );
 }

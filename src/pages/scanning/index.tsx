@@ -4,7 +4,7 @@ import React from "react";
 
 const scannerId: string = 'qr-reader';
 
-function Page() {
+function ScanPage() {
     const [result, setResult] = React.useState<string>('');
 
     React.useEffect(() => {
@@ -41,7 +41,7 @@ function Page() {
 
     return (
         <>
-            Scan Page
+            Scan ScanPage
             <div id={scannerId} style={{ width: '100%', maxWidth: '400px' }} />
             <p>Result : {result}
             </p>
@@ -49,4 +49,4 @@ function Page() {
     );
 }
 
-export default Page;
+export default ScanPage;

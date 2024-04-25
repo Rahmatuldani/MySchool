@@ -1,0 +1,38 @@
+[
+    {
+        "_id": "123180000",
+        "name": "Administrator",
+        "password": "adminpass",
+        "role": "Administrator",
+        "gender": "Male",
+        "address": "Address 1",
+        "phone": "08123456789"
+    },
+    {
+        "_id": "123180001",
+        "name": "Teacher",
+        "password": "adminpass",
+        "role": "Teacher",
+        "gender": "Female",
+        "address": "Address 2",
+        "phone": "08123456789"
+    },
+    {
+        "_id": "123180002",
+        "name": "Student",
+        "password": "adminpass",
+        "role": "Student",
+        "gender": "Female",
+        "address": "Address 3",
+        "phone": "08123456789"
+    },
+    {
+        "_id": "123180003",
+        "name": "Staff",
+        "password": "adminpass",
+        "role": "Staff",
+        "gender": "Male",
+        "address": "Address 4",
+        "phone": "08123456789"
+    }
+]

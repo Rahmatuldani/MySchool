@@ -2,12 +2,22 @@ import { Button, Dropdown, Nav, Navbar } from 'react-bootstrap';
 import { FiActivity, FiBell, FiLogOut, FiMail, FiMenu, FiSettings } from 'react-icons/fi';
 import Profile from '../assets/assets/img/illustrations/profiles/profile-1.png';
 import { UserType } from '../store/user/types';
+import { Dispatch } from 'redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { LogoutFunction } from '../store/auth/action';
+import { selectAuth } from '../store/auth/selector';
 
 
 function NavbarComponent() {
-    const currentUser: UserType | null = null;
+    const currentUser: UserType | null = useSelector(selectAuth);
+    const dispatch: Dispatch = useDispatch();
+
     function ToggleSidebar() {
         document.body.classList.toggle('sidenav-toggled');
+    }
+
+    function Logout() {
+        LogoutFunction(dispatch);
     }
     return (
         <Navbar
@@ -140,7 +150,7 @@ function NavbarComponent() {
                             </div>
                             Account
                         </Dropdown.Item>
-                        <Dropdown.Item >
+                        <Dropdown.Item onClick={Logout}>
                             <div className='dropdown-item-icon'>
                                 <FiLogOut/>
                             </div>

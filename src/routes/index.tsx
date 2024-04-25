@@ -1,12 +1,9 @@
-/* eslint-disable react-refresh/only-export-components */
 import { createBrowserRouter, createRoutesFromElements, isRouteErrorResponse, Route, useRouteError } from "react-router-dom";
-import Login from "../pages/login";
-import AdminRoutes from "./admin";
-import TeacherRoutes from "./teacher";
-import StudentRoutes from "./student";
 import App from "../App";
+import Login from "../pages/login";
 import ScanPage from "../pages/scanning";
 
+// eslint-disable-next-line react-refresh/only-export-components
 function ErrorBoundary() {
     const error = useRouteError();
 
@@ -17,34 +14,15 @@ function ErrorBoundary() {
     );
 }
 
-function RouteRedirect() {
-    const user: string | null = 'Administrator';
-    if (!user) {
-        return <>
-            <Route index element={<App/>}/>
-            <Route path="/login" element={<Login/>}/>
-        </>;
-    }
-    if (user === 'Administrator') {
-        return AdminRoutes();
-    }
-    if (user === 'Teacher') {
-        return TeacherRoutes();
-    }
-    if (user === 'Student') {
-        return StudentRoutes();
-    }
-}
-
-
-const routes = createBrowserRouter(
+const routers = createBrowserRouter(
     createRoutesFromElements(
         <Route errorElement={<ErrorBoundary/>}>
-            {RouteRedirect()}
-            <Route path="/scan" element={<ScanPage/>}/>
-            <Route path="*" element={<>Not Found</>}/>
+            <Route path='/' element={<App/>}/>
+            <Route path='/login' element={<Login/>}/>
+            <Route path='/scan' element={<ScanPage/>}/>
+            <Route path='*' element={<>Not Found Page</>}/>
         </Route>
     )
 );
 
-export default routes;
+export default routers;
