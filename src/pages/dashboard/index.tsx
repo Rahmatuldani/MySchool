@@ -1,5 +1,5 @@
-import { Col, Container, Row } from 'react-bootstrap';
-import { FiActivity } from 'react-icons/fi';
+import { Col, Container, Row } from "react-bootstrap";
+import { FiActivity } from "react-icons/fi";
 
 function Dashboard() {
     return (
