@@ -1,8 +1,14 @@
 import { Col, Container, Row } from 'react-bootstrap';
 import { FaUser } from 'react-icons/fa6';
 import { Outlet } from 'react-router-dom';
+import { FetchUsersFunction } from '../../../store/user/action';
+import { useDispatch } from 'react-redux';
+import { Dispatch } from 'redux';
 
 function Users() {
+    const dispatch: Dispatch = useDispatch();
+    FetchUsersFunction(dispatch);
+    
     return (
         <main>
             <header className='page-header page-header-dark bg-gradient-primary-to-secondary pb-10'>

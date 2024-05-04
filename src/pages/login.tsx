@@ -53,14 +53,14 @@ function Login() {
                                                 control={control}
                                                 name='username'
                                                 rules={{
-                                                    required: 'Masukkan NIP/NISN',
-                                                    pattern: { value: /^\d+$/, message: "Input harus berupa angka" }
+                                                    required: 'Username is required',
+                                                    pattern: { value: /^\d+$/, message: "Username must be a number" }
                                                 }}
                                                 defaultValue=''
                                                 render={({ field }) => (
                                                     <Form.Group className='mb-2' id="inputId">
-                                                        <Form.Label className='small mb-1'>NIP/NISN</Form.Label>
-                                                        <Form.Control placeholder='Enter NIP/NISN' {...field} />
+                                                        <Form.Label className='small mb-1'>Username</Form.Label>
+                                                        <Form.Control placeholder='Enter username' {...field} />
                                                         {errors.username && <span className='small text-danger'>{errors.username.message}</span>}
                                                     </Form.Group>
                                                 )}
@@ -70,8 +70,8 @@ function Login() {
                                                 control={control}
                                                 name='password'
                                                 rules={{
-                                                    required: 'Masukkan password',
-                                                    minLength: { value: 6, message: 'Password minimal 6 huruf' }
+                                                    required: 'Password is required',
+                                                    minLength: { value: 6, message: 'Password length min 6 character' }
                                                 }}
                                                 defaultValue=''
                                                 render={({ field }) => (

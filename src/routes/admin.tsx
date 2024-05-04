@@ -5,7 +5,7 @@ import AdminLayout from '../pages/admin';
 const Dashboard = React.lazy(() => import('../pages/admin/dashboard'));
 const Users = React.lazy(() => import('../pages/admin/users'));
 const ListUsers = React.lazy(() => import('../pages/admin/users/list'));
-const AddUser = React.lazy(() => import('../pages/admin/users/add'));
+const UserForm = React.lazy(() => import('../pages/admin/users/form'));
 
 const AdminRoutes: RouteObject = {
     path: "Administrator",
@@ -24,7 +24,11 @@ const AdminRoutes: RouteObject = {
                 },
                 {
                     path: 'add',
-                    element: <AddUser/>
+                    element: <UserForm/>
+                },
+                {
+                    path: 'edit/:id',
+                    element: <UserForm/>
                 }
             ]
         }

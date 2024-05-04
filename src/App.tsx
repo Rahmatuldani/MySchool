@@ -16,7 +16,6 @@ function App() {
     LogoutFunction(dispatch);
   }
 
-
   return (
     <>
       App Page

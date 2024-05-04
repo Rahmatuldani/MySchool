@@ -11,7 +11,7 @@ interface AlertProps {
 function Alert({title, text, icon, cancelButton, confirmText }: AlertProps) {
     return Swal.fire({
         title,
-        text,
+        html: text,
         icon,
         showCancelButton: cancelButton,
         cancelButtonColor: '#d33',
