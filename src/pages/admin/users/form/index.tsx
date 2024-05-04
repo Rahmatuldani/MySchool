@@ -1,9 +1,12 @@
 import { Button, Card, Col, Container, Form, Row, Spinner } from "react-bootstrap";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { UserType } from "../../../../store/user/types";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectUsers, selectUsersIsLoading } from "../../../../store/user/selector";
-import { useParams } from "react-router-dom";
+import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
+import { CreateUsersFunction } from "../../../../store/user/action";
+import Alert from "../../../../utils/alert";
+import { Dispatch } from "redux";
 
 function UserForm() {
     const users: UserType[] = useSelector(selectUsers);
@@ -13,10 +16,30 @@ function UserForm() {
         data = users.find(user => user._id === id);
     }
     const loading: boolean = useSelector(selectUsersIsLoading);
+    const navigate: NavigateFunction = useNavigate();
+    const dispatch: Dispatch = useDispatch();
     const { handleSubmit, control, formState: { errors } } = useForm<UserType>();
 
     const FormSubmit: SubmitHandler<UserType> = (data) => {
-        console.log(data);
+        CreateUsersFunction(dispatch, data)
+            .then(result => {
+                Alert({
+                    title: 'Success',
+                    text: result,
+                    icon: 'success'
+                }).then(result => {
+                    if (result.isConfirmed) {
+                        navigate('/Administrator/users');
+                    }
+                });
+            })
+            .catch(err => {
+                Alert({
+                    title: 'Error',
+                    text: err,
+                    icon: 'error'
+                });
+            });
     };
 
     return (
@@ -101,6 +124,7 @@ function UserForm() {
                                     <Form.Group as={Col} className='mb-2' controlId='inputAddress'>
                                         <Form.Label className='small mb-1'>Address</Form.Label>
                                         <Form.Control placeholder='Enter address' {...field} />
+                                        {errors.address && <span className='small text-danger'>{errors.address.message}</span>}
                                     </Form.Group>
                                 )}
                             />

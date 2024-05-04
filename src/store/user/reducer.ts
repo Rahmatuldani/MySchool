@@ -1,6 +1,6 @@
 import { AnyAction } from "redux";
 import { UserType } from "../user/types";
-import { deleteUsers, emptyUsers, fetchUsers, reducerError, reducerLoading } from "./action";
+import { createUsers, deleteUsers, emptyUsers, fetchUsers, reducerError, reducerLoading } from "./action";
 
 export type UsersState = {
     readonly users: UserType[];
@@ -24,6 +24,9 @@ export default function usersReducer(
 
     if (fetchUsers.match(action)) {
         return {...state, isLoading: false, error: null, users: action.payload};
+    }
+    if (createUsers.match(action)) {
+        return {...state, isLoading: false, error: null, users: [...state.users, action.payload]};
     }
     if (deleteUsers.match(action)) {
         const newUsers: UserType[] = state.users.filter(user => user._id !== action.payload);

@@ -2,7 +2,7 @@ import DataTable, { TableColumn } from "react-data-table-component";
 import { UserType } from "../../../../store/user/types";
 import { Button, Card, Container, Form, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { FiTrash2 } from "react-icons/fi";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectUsers, selectUsersIsLoading } from "../../../../store/user/selector";
 import useState from "../../../../hooks/useState";
 import LoadingComponent from "../../../../components/loading";
@@ -11,11 +11,16 @@ import Alert from "../../../../utils/alert";
 import { FaEdit } from "react-icons/fa";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import DetailUser from "../detail";
+import { DeleteUsersFunction } from "../../../../store/user/action";
+import { Dispatch } from "redux";
+import { selectAuth } from "../../../../store/auth/selector";
 
 function ListUsers() {
+    const auth: UserType | null = useSelector(selectAuth);
     const users: UserType[] = useSelector(selectUsers);
     const loading: boolean = useSelector(selectUsersIsLoading);
     const navigate: NavigateFunction = useNavigate();
+    const dispatch: Dispatch = useDispatch();
     const [filter, setFilter] = useState<string>('');
     const [showDetail, setShowDetail] = useState<boolean>(false);
 
@@ -29,11 +34,21 @@ function ListUsers() {
         })
             .then((result) => {
                 if (result.isConfirmed) {
-                    Alert({
-                        title: 'Success',
-                        icon: 'success',
-                        text: 'User deleted'
-                    });
+                    DeleteUsersFunction(dispatch, user._id)
+                        .then(result => {
+                            Alert({
+                                title: 'Success',
+                                icon: 'success',
+                                text: result
+                            });
+                        })
+                        .catch(err => {
+                            Alert({
+                                title: 'Error',
+                                icon: 'error',
+                                text: err
+                            });
+                        });
                 }
             });
     }
@@ -44,7 +59,7 @@ function ListUsers() {
 
     const columns: TableColumn<UserType>[] = [
         {
-            name: 'NIP/NISN',
+            name: 'Username',
             selector: row => row.username,
             sortable: true
         }, {
@@ -58,43 +73,50 @@ function ListUsers() {
             name: 'Action',
             cell: (row) => (
                 <div className="d-flex gap-1">
-                    <OverlayTrigger
-                        placement='top'
-                        overlay={
-                            <Tooltip id='detailTooltip'>Details</Tooltip>
-                        }
-                    >
-                        <Button variant='icon' className='btn-transparent-dark btn-datatable' onClick={() => setShowDetail(true)}>
-                            <FaClipboardList />
-                        </Button>
-                    </OverlayTrigger>
-                    <DetailUser open={showDetail} handleClose={handleCloseDetail} data={row}/>
-                    <OverlayTrigger
-                        placement='top'
-                        overlay={
-                            <Tooltip id='editTooltip'>Edit</Tooltip>
-                        }
-                    >
-                        <Button variant='icon' className='btn-transparent-dark btn-datatable' onClick={() => navigate(`/Administrator/users/edit/${row._id}`)}>
-                            <FaEdit />
-                        </Button>
-                    </OverlayTrigger>
-                    <OverlayTrigger
-                        placement='top'
-                        overlay={
-                            <Tooltip id='deleteTooltip'>Delete</Tooltip>
-                        }
-                    >
-                        <Button variant='icon' className='btn-transparent-dark btn-datatable' onClick={() => handleDelete(row)}>
-                            <FiTrash2 />
-                        </Button>
-                    </OverlayTrigger>
+                    {auth?._id === row._id ? '' : (
+                        <>
+                            <OverlayTrigger
+                                placement='top'
+                                overlay={
+                                    <Tooltip id='detailTooltip'>Details</Tooltip>
+                                }
+                            >
+                                <Button variant='icon' className='btn-transparent-dark btn-datatable' onClick={() => setShowDetail(true)}>
+                                    <FaClipboardList />
+                                </Button>
+                            </OverlayTrigger>
+                            <DetailUser open={showDetail} handleClose={handleCloseDetail} data={row}/>
+                            <OverlayTrigger
+                                placement='top'
+                                overlay={
+                                    <Tooltip id='editTooltip'>Edit</Tooltip>
+                                }
+                            >
+                                <Button variant='icon' className='btn-transparent-dark btn-datatable' onClick={() => navigate(`/Administrator/users/edit/${row._id}`)}>
+                                    <FaEdit />
+                                </Button>
+                            </OverlayTrigger>
+                            <OverlayTrigger
+                                placement='top'
+                                overlay={
+                                    <Tooltip id='deleteTooltip'>Delete</Tooltip>
+                                }
+                            >
+                                <Button variant='icon' className='btn-transparent-dark btn-datatable' onClick={() => handleDelete(row)}>
+                                    <FiTrash2 />
+                                </Button>
+                            </OverlayTrigger>
+                        </>
+                    )}
                 </div>
             )
         }
     ];
 
-    const filterUsers: UserType[] = users.filter((user) => user.username.toString().includes(filter) || user.name.toLowerCase().includes(filter.toLowerCase()));
+    const filterUsers: UserType[] = users.filter((user) => 
+        user.username.includes(filter) || 
+        user.name.toLowerCase().includes(filter.toLowerCase())
+    );
 
     return (
         <Container className="mt-n10">

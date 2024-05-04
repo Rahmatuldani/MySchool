@@ -56,7 +56,40 @@ export async function FetchUsersFunction(dispatch: Dispatch): Promise<string> {
         }
         const result: ServerResponse = response.data;
         dispatch(fetchUsers(result.data as UserType[]));
-        return resolve('Login success');
+        return resolve(result.message);
+    });
+}
+
+// Begin Create User
+export type CreateUsers = ActionWithPayload<USERS_ACTION_TYPES.CREATE_USERS, UserType>;
+export const createUsers = withMatcher(
+    (user: UserType): CreateUsers => createAction(USERS_ACTION_TYPES.CREATE_USERS, user)
+);
+
+export async function CreateUsersFunction(dispatch: Dispatch, data: UserType): Promise<string> {
+    dispatch(reducerLoading());
+    const response: AxiosResponse | AxiosError = await UserApi.Create(data);
+
+    return new Promise((resolve, reject) => {
+        if (response instanceof AxiosError) {
+            if (response.code === 'ERR_NETWORK') {
+                dispatch(reducerError(response.message));
+                return reject('Unable connect to server');
+            }
+            if (response.response) {
+                console.log(response);
+                
+                const responseData: ServerResponse = response.response.data as ServerResponse;
+                dispatch(reducerError(responseData.message));
+                return reject(responseData.message);
+            }
+            
+            dispatch(reducerError(response.message));
+            return reject(response.message);
+        }
+        const result: ServerResponse = response.data;
+        dispatch(createUsers(result.data as UserType));
+        return resolve(result.message);
     });
 }
 
@@ -66,19 +99,29 @@ export const deleteUsers = withMatcher(
     (id: string): DeleteUsers => createAction(USERS_ACTION_TYPES.DELETE_USERS, id)
 );
 
-export function DeleteUsersFunction(dispatch: Dispatch, id: string): Promise<string> {
+export async function DeleteUsersFunction(dispatch: Dispatch, id: string): Promise<string> {
     dispatch(reducerLoading());
+    const response: AxiosResponse | AxiosError = await UserApi.Delete(id);
 
     return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            const result = 10+60;
-            if (result === 70) {
-                dispatch(deleteUsers(id));
-                return resolve('Delete users success');
+        if (response instanceof AxiosError) {
+            if (response.code === 'ERR_NETWORK') {
+                dispatch(reducerError(response.message));
+                return reject('Unable connect to server');
             }
-            const error: Error = new Error('Delete users failed');
-            dispatch(reducerError(error));
-            return reject(error);
-        }, 1000);
+            if (response.response) {
+                console.log(response);
+                
+                const responseData: ServerResponse = response.response.data as ServerResponse;
+                dispatch(reducerError(responseData.message));
+                return reject(responseData.message);
+            }
+            
+            dispatch(reducerError(response.message));
+            return reject(response.message);
+        }
+        const result: ServerResponse = response.data;
+        dispatch(deleteUsers(id));
+        return resolve(result.message);
     });
 }
