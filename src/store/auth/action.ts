@@ -2,6 +2,9 @@ import { Dispatch } from "redux";
 import { Action, ActionWithPayload, createAction, withMatcher } from "../../utils/reducer";
 import { UserType } from "../user/types";
 import { AUTH_ACTION_TYPES, LoginType } from "./types";
+import { AxiosError, AxiosResponse } from "axios";
+import AuthApi from "../../data/authApi";
+import { ServerResponse } from "../shared/type";
 
 // Reducer Loading
 export type ReducerLoading = Action<AUTH_ACTION_TYPES.REDUCER_LOADING>;
@@ -10,9 +13,9 @@ export const reducerLoading = withMatcher(
 );
 
 // Reducer Error
-export type ReducerError = ActionWithPayload<AUTH_ACTION_TYPES.REDUCER_ERROR, Error>;
+export type ReducerError = ActionWithPayload<AUTH_ACTION_TYPES.REDUCER_ERROR, Error | string>;
 export const reducerError = withMatcher(
-    (error: Error): ReducerError => createAction(AUTH_ACTION_TYPES.REDUCER_ERROR, error)
+    (error: Error | string): ReducerError => createAction(AUTH_ACTION_TYPES.REDUCER_ERROR, error)
 );
 
 // Begin Login
@@ -21,20 +24,29 @@ export const login = withMatcher(
     (user: UserType): Login => createAction(AUTH_ACTION_TYPES.LOGIN, user)
 );
 
-export async function LoginFunction(dispatch: Dispatch, users: UserType[], data: LoginType): Promise<string> {
+export async function LoginFunction(dispatch: Dispatch, data: LoginType): Promise<string> {
     dispatch(reducerLoading());
-    const user: UserType | undefined = users.find(user => user._id === data._id);
+    const response: AxiosResponse | AxiosError = await AuthApi.Login(data);
+    
     return new Promise((resolve, reject) => {
-        if (!user) {
-            dispatch(reducerError(new Error('User not found')));
-            return reject('User not found');
+        if (response instanceof AxiosError) {
+            if (response.code === 'ERR_NETWORK') {
+                dispatch(reducerError(response.message));
+                return reject('Unable connect to server');
+            }
+            if (response.response) {
+                console.log(response);
+                
+                const responseData: ServerResponse = response.response.data as ServerResponse;
+                dispatch(reducerError(responseData.message));
+                return reject(responseData.message);
+            }
+            
+            dispatch(reducerError(new Error(response.message)));
+            return reject(response.message);
         }
-        if (user.password !== data.password) {
-            dispatch(reducerError(new Error('Wrong password')));
-            return reject('Wrong password');
-        }
-
-        dispatch(login(user));
+        const result: ServerResponse = response.data;
+        dispatch(login(result.data as UserType));
         return resolve('Login success');
     });
 }

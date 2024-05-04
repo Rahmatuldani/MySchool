@@ -39,3 +39,26 @@ export function FetchUsersFunction(dispatch: Dispatch): Promise<string> {
         }, 1000);
     });
 }
+
+// Begin Delete User
+export type DeleteUsers = ActionWithPayload<USERS_ACTION_TYPES.DELETE_USERS, string>;
+export const deleteUsers = withMatcher(
+    (id: string): DeleteUsers => createAction(USERS_ACTION_TYPES.DELETE_USERS, id)
+);
+
+export function DeleteUsersFunction(dispatch: Dispatch, id: string): Promise<string> {
+    dispatch(reducerLoading());
+
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            const result = 10+60;
+            if (result === 70) {
+                dispatch(deleteUsers(id));
+                return resolve('Delete users success');
+            }
+            const error: Error = new Error('Delete users failed');
+            dispatch(reducerError(error));
+            return reject(error);
+        }, 1000);
+    });
+}

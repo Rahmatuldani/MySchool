@@ -12,7 +12,7 @@ export enum USERS_ACTION_TYPES {
 export type UserType = {
     _id: string;
     name: string;
-    password: string;
+    username: number;
     role: string;
     gender: string;
     address: string;

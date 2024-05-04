@@ -1,13 +1,11 @@
 /* eslint-disable react-refresh/only-export-components */
-import React from "react";
-import { createBrowserRouter, createRoutesFromElements, isRouteErrorResponse, Route, useRouteError } from "react-router-dom";
+import { createBrowserRouter, isRouteErrorResponse, useRouteError } from "react-router-dom";
 import App from "../App";
 import Login from "../pages/login";
 import ScanPage from "../pages/scanning";
-import NotFoundPage from "../pages/errors/notFound";
-
-const Dashboard = React.lazy(() => import('../pages/dashboard'));
-const Users = React.lazy(() => import('../pages/users'));
+import AdminRoutes from "./admin";
+import TeacherRoutes from "./teacher";
+import StudentRoutes from "./student";
 
 function ErrorBoundary() {
     const error = useRouteError();
@@ -19,18 +17,23 @@ function ErrorBoundary() {
     );
 }
 
-const routers = createBrowserRouter(
-    createRoutesFromElements(
-        <Route errorElement={<ErrorBoundary/>}>
-            <Route path='/' element={<App/>}>
-                <Route index element={<Dashboard/>}/>
-                <Route path="/users" element={<Users/>}/>
-            </Route>
-            <Route path='/login' element={<Login/>}/>
-            <Route path='/scan' element={<ScanPage/>}/>
-            <Route path='*' element={<NotFoundPage/>}/>
-        </Route>
-    )
-);
+const routers = createBrowserRouter([
+    {
+        path: "/",
+        element: <App/>,
+        errorElement: <ErrorBoundary/>
+    },
+    AdminRoutes,
+    TeacherRoutes,
+    StudentRoutes,
+    {
+        path: "/login",
+        element: <Login/>
+    },
+    {
+        path: "/scan",
+        element: <ScanPage/>
+    },
+]);
 
 export default routers;

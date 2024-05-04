@@ -7,6 +7,6 @@ export enum AUTH_ACTION_TYPES {
 }
 
 export type LoginType = {
-    _id: string;
+    username: string;
     password: string;
 }

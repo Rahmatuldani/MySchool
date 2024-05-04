@@ -25,10 +25,10 @@ function NotFoundPage() {
                 <footer className="footer mt-auto footer-light">
                     <Container fluid>
                         <Row className="row">
-                            <Col md={6} className="small">Copyright &#xA9; 2024 {config.developer}</Col>
+                            <Col md={6} className="small">Copyright &#xA9; 2024 &#8226; {config.developer}</Col>
                             <div className="col-md-6 text-md-right small">
                                 <a href="#!">Privacy Policy </a>
-                                &#xB7;
+                                &#8226;
                                 <a href="#!"> Terms &amp; Conditions</a>
                             </div>
                         </Row>

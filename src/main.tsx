@@ -6,6 +6,9 @@ import { Provider } from 'react-redux';
 import { persistor, store } from './store/store.ts';
 import { PersistGate } from 'redux-persist/integration/react';
 import { RouterProvider } from 'react-router-dom';
+import config from './config/config.ts';
+
+document.title = config.title;
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <Provider store={store}>

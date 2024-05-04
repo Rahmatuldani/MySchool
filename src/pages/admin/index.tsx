@@ -1,10 +1,10 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 
-function TeacherLayout() {
+function AdminLayout() {
     return (
         <>
-            Teacher Layout
+            Admin Layout
             <React.Suspense fallback={<>Loading ...</>}>
                 <Outlet/>
             </React.Suspense>
@@ -12,4 +12,4 @@ function TeacherLayout() {
     );
 }
 
-export default TeacherLayout;
+export default AdminLayout;

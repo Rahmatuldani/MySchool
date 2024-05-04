@@ -4,7 +4,6 @@ import { LoginType } from "../store/auth/types";
 import { LoginFunction } from "../store/auth/action";
 import { UserType } from "../store/user/types";
 import { useDispatch, useSelector } from "react-redux";
-import { selectUsers } from "../store/user/selector";
 import { Dispatch } from "redux";
 import Alert from "../utils/alert";
 import { Navigate, NavigateFunction, useNavigate } from "react-router-dom";
@@ -13,18 +12,15 @@ import { selectAuth, selectAuthIsLoading } from "../store/auth/selector";
 function Login() {
     document.body.className = 'bg-primary';
     const user: UserType | null = useSelector(selectAuth);
-    const users: UserType[] = useSelector(selectUsers);
     const navigate: NavigateFunction = useNavigate();
     const loading: boolean = useSelector(selectAuthIsLoading);
     const { handleSubmit, control, formState: { errors } } = useForm<LoginType>();
     const dispatch: Dispatch = useDispatch();
 
     const FormSubmit: SubmitHandler<LoginType> = function(data) {
-        LoginFunction(dispatch, users, data)
-            .then(() => {
-                navigate('/');
-            })
-            .catch((error: string) => {
+        LoginFunction(dispatch, data)
+            .then(() => navigate('/'))
+            .catch(error => {
                 Alert({
                     title: 'Error',
                     text: error,
@@ -55,16 +51,17 @@ function Login() {
                                             {/* <!-- Form Group (email address)--> */}
                                             <Controller
                                                 control={control}
-                                                name='_id'
+                                                name='username'
                                                 rules={{
-                                                    required: 'NIP/NISN is required',
+                                                    required: 'Masukkan NIP/NISN',
+                                                    pattern: { value: /^\d+$/, message: "Input harus berupa angka" }
                                                 }}
                                                 defaultValue=''
                                                 render={({ field }) => (
                                                     <Form.Group className='mb-2' id="inputId">
                                                         <Form.Label className='small mb-1'>NIP/NISN</Form.Label>
                                                         <Form.Control placeholder='Enter NIP/NISN' {...field} />
-                                                        {errors._id && <span className='small text-danger'>{errors._id.message}</span>}
+                                                        {errors.username && <span className='small text-danger'>{errors.username.message}</span>}
                                                     </Form.Group>
                                                 )}
                                             />
@@ -73,8 +70,8 @@ function Login() {
                                                 control={control}
                                                 name='password'
                                                 rules={{
-                                                    required: 'Password is required',
-                                                    minLength: { value: 6, message: 'Password length min 6 character' }
+                                                    required: 'Masukkan password',
+                                                    minLength: { value: 6, message: 'Password minimal 6 huruf' }
                                                 }}
                                                 defaultValue=''
                                                 render={({ field }) => (
@@ -90,7 +87,7 @@ function Login() {
                                                 <Button type='submit' variant='primary' disabled={loading}>
                                                     {loading ? (
                                                         <Spinner animation='border' size='sm' />
-                                                    ) : 'Submit'}
+                                                    ) : 'Login'}
                                                 </Button>
                                             </Form.Group>
                                         </Form>
