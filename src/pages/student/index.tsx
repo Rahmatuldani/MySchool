@@ -1,7 +1,13 @@
 import React from "react";
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
+import { UserType } from "../../store/user/types";
+import { useSelector } from "react-redux";
+import { selectAuth } from "../../store/auth/selector";
 
 function StudentLayout() {
+    const auth: UserType | null = useSelector(selectAuth);
+    if (auth && auth.role != 'Student') { return <Navigate to={`/${auth.role}`} replace/>;}
+
     return (
         <>
             Student Layout

@@ -6,6 +6,7 @@ import { Dispatch } from 'redux';
 import { useDispatch, useSelector } from 'react-redux';
 import { LogoutFunction } from '../store/auth/action';
 import { selectAuth } from '../store/auth/selector';
+import config from '../config/config';
 
 
 function NavbarComponent() {
@@ -31,7 +32,7 @@ function NavbarComponent() {
             {/* <!-- * * Tip * * You can use text or an image for your navbar brand.--> */}
             {/* <!-- * * * * * * When using an image, we recommend the SVG format.--> */}
             {/* <!-- * * * * * * Dimensions: Maximum height: 32px, maximum width: 240px--> */}
-            <Navbar.Brand>Hospital App</Navbar.Brand>
+            <Navbar.Brand>{config.title}</Navbar.Brand>
             {/* <!-- Sidenav Toggle Button--> */}
             <Button
                 variant='icon'
@@ -139,8 +140,8 @@ function NavbarComponent() {
                         >
                             <img className='dropdown-user-img' src={Profile} alt='Profile Image'/>
                             <div className='dropdown-user-details'>
-                                <div className='dropdown-user-details-name'>{currentUser ? (currentUser as UserType).name : 'Testing'}</div>
-                                <div className='dropdown-user-details-email'>{currentUser ? (currentUser as UserType)._id : '00000000'}</div>
+                                <div className='dropdown-user-details-name'>{currentUser ? currentUser.name : 'Testing'}</div>
+                                <div className='dropdown-user-details-email'>{currentUser ? currentUser.username : '00000000'}</div>
                             </div>
                         </Dropdown.Header>
                         <Dropdown.Divider/>

@@ -1,7 +1,8 @@
 import { Col, Container, Row } from 'react-bootstrap';
-import { FiActivity } from 'react-icons/fi';
+import { FaUser } from 'react-icons/fa6';
+import { Outlet } from 'react-router-dom';
 
-function Dashboard() {
+function Users() {
     return (
         <main>
             <header className='page-header page-header-dark bg-gradient-primary-to-secondary pb-10'>
@@ -11,17 +12,18 @@ function Dashboard() {
                             <Col xs='auto' className=' mt-4'>
                                 <h1 className='page-header-title'>
                                     <div className='page-header-icon'>
-                                        <FiActivity />
+                                        <FaUser/>
                                     </div>
-                                    Dashboard
+                                    Users
                                 </h1>
                             </Col>
                         </Row>
                     </div>
                 </Container>
             </header>
+            <Outlet/>
         </main>
     );
 }
 
-export default Dashboard;
+export default Users;
