@@ -1,26 +1,25 @@
 import axios, { AxiosError, AxiosInstance } from "axios";
 import config from "../config/config";
-import { LoginType } from "../store/auth/types";
 
-const AuthApi = (() => {
+const StudentApi = (() => {
     const server: AxiosInstance = axios.create({
-        baseURL: config.server+'/auth',
+        baseURL: config.server+'/students',
         headers: {
             'Content-Type': 'application/json'
         }
     });
 
-    async function Login(data: LoginType) {
+    async function Fetch() {
         try {
-            return await server.post("/login", data);
+            return await server.get('/');
         } catch (error) {
             return error as AxiosError;
         }
     }
 
     return {
-        Login
+        Fetch
     };
 })();
 
-export default AuthApi;
+export default StudentApi;

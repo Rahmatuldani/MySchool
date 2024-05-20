@@ -1,21 +1,23 @@
 import { Button, Card, Col, Container, Form, Row, Spinner } from "react-bootstrap";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { LoginType } from "../store/auth/types";
-import { LoginFunction } from "../store/auth/action";
-import { UserType } from "../store/user/types";
+import { LoginType } from "../../store/auth/types";
+import { LoginFunction } from "../../store/auth/action";
 import { useDispatch, useSelector } from "react-redux";
 import { Dispatch } from "redux";
-import Alert from "../utils/alert";
+import Alert from "../../utils/alert";
 import { Navigate, NavigateFunction, useNavigate } from "react-router-dom";
-import { selectAuth, selectAuthIsLoading } from "../store/auth/selector";
+import { selectAuth, selectAuthIsLoading } from "../../store/auth/selector";
+import { TeacherType } from "../../store/teacher/types";
+import { StudentType } from "../../store/student/types";
+import { StaffType } from "../../store/staff/types";
 
 function Login() {
     document.body.className = 'bg-primary';
-    const user: UserType | null = useSelector(selectAuth);
+    const user: TeacherType | StudentType | StaffType | null = useSelector(selectAuth);
     const navigate: NavigateFunction = useNavigate();
     const loading: boolean = useSelector(selectAuthIsLoading);
-    const { handleSubmit, control, formState: { errors } } = useForm<LoginType>();
     const dispatch: Dispatch = useDispatch();
+    const { handleSubmit, control, formState: { errors } } = useForm<LoginType>();
 
     const FormSubmit: SubmitHandler<LoginType> = function(data) {
         LoginFunction(dispatch, data)
@@ -48,7 +50,6 @@ function Login() {
                                     <Card.Body>
                                         {/* <!-- Login form--> */}
                                         <Form onSubmit={handleSubmit(FormSubmit)}>
-                                            {/* <!-- Form Group (email address)--> */}
                                             <Controller
                                                 control={control}
                                                 name='username'

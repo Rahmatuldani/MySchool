@@ -1,12 +1,16 @@
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import { UserType } from "../../store/user/types";
 import { useSelector } from "react-redux";
-import { selectAuth } from "../../store/auth/selector";
+import { selectAuth, selectAuthRole } from "../../store/auth/selector";
+import { TeacherType } from "../../store/teacher/types";
 
 function TeacherLayout() {
-    const auth: UserType | null = useSelector(selectAuth);
-    if (auth && auth.role != 'Teacher') { return <Navigate to={`/${auth.role}`} replace/>;}
+    const auth: TeacherType = useSelector(selectAuth) as TeacherType;
+    const role: string = useSelector(selectAuthRole) as string;
+    if (role !== 'Teacher') {
+        return <Navigate to={'/'} replace/>;
+    }
+    if (!auth) { return <Navigate to={'/login'} replace/>; }
 
     return (
         <>

@@ -1,13 +1,13 @@
 import { Col, Container, Row } from 'react-bootstrap';
 import { FaUser } from 'react-icons/fa6';
 import { Outlet } from 'react-router-dom';
-import { FetchUsersFunction } from '../../../store/user/action';
 import { useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
+import { FetchTeachersFunction } from '../../../store/teacher/action';
 
-function Users() {
+function Teachers() {
     const dispatch: Dispatch = useDispatch();
-    FetchUsersFunction(dispatch);
+    FetchTeachersFunction(dispatch);
     
     return (
         <main>
@@ -20,7 +20,7 @@ function Users() {
                                     <div className='page-header-icon'>
                                         <FaUser/>
                                     </div>
-                                    Users
+                                    Teachers
                                 </h1>
                             </Col>
                         </Row>
@@ -32,4 +32,4 @@ function Users() {
     );
 }
 
-export default Users;
+export default Teachers;

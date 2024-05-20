@@ -3,9 +3,16 @@ import { RouteObject } from 'react-router-dom';
 import AdminLayout from '../pages/admin';
 
 const Dashboard = React.lazy(() => import('../pages/admin/dashboard'));
-const Users = React.lazy(() => import('../pages/admin/users'));
-const ListUsers = React.lazy(() => import('../pages/admin/users/list'));
-const UserForm = React.lazy(() => import('../pages/admin/users/form'));
+
+const Teachers = React.lazy(() => import('../pages/admin/teacher'));
+const TeachersList = React.lazy(() => import('../pages/admin/teacher/list'));
+const TeachersAdd = React.lazy(() => import('../pages/admin/teacher/add'));
+
+const Students = React.lazy(() => import('../pages/admin/student'));
+const StudentsList = React.lazy(() => import('../pages/admin/student/list'));
+
+const Classroom = React.lazy(() => import('../pages/admin/classroom'));
+const ListClass = React.lazy(() => import('../pages/admin/classroom/list'));
 
 const AdminRoutes: RouteObject = {
     path: "Administrator",
@@ -14,21 +21,38 @@ const AdminRoutes: RouteObject = {
         {
             index: true,
             element: <Dashboard/>
-        },{
-            path: 'users',
-            element: <Users/>,
+        },
+        {
+            path: 'teachers',
+            element: <Teachers/>,
             children: [
                 {
                     index: true,
-                    element: <ListUsers/>
+                    element: <TeachersList/>
                 },
                 {
                     path: 'add',
-                    element: <UserForm/>
+                    element: <TeachersAdd/>
                 },
+            ]
+        },
+        {
+            path: 'students',
+            element: <Students/>,
+            children: [
                 {
-                    path: 'edit/:id',
-                    element: <UserForm/>
+                    index: true,
+                    element: <StudentsList/>
+                },
+            ]
+        },
+        {
+            path: 'classrooms',
+            element: <Classroom/>,
+            children: [
+                {
+                    index: true,
+                    element: <ListClass/>
                 }
             ]
         }

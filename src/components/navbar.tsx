@@ -1,20 +1,31 @@
 import { Button, Dropdown, Nav, Navbar } from 'react-bootstrap';
 import { FiActivity, FiBell, FiLogOut, FiMail, FiMenu, FiSettings } from 'react-icons/fi';
 import Profile from '../assets/assets/img/illustrations/profiles/profile-1.png';
-import { UserType } from '../store/user/types';
 import { Dispatch } from 'redux';
 import { useDispatch, useSelector } from 'react-redux';
 import { LogoutFunction } from '../store/auth/action';
 import { selectAuth } from '../store/auth/selector';
 import config from '../config/config';
+import { TeacherType } from '../store/teacher/types';
+import { StudentType } from '../store/student/types';
+import { StaffType } from '../store/staff/types';
 
 
 function NavbarComponent() {
-    const currentUser: UserType | null = useSelector(selectAuth);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const currentUser: TeacherType | StudentType | StaffType | null | any = useSelector(selectAuth);
     const dispatch: Dispatch = useDispatch();
 
     function ToggleSidebar() {
         document.body.classList.toggle('sidenav-toggled');
+    }
+
+    function helper() {
+        if (!currentUser) {
+            return '0000000000';
+        } else {
+            return currentUser.nip ?? currentUser.nisn ?? currentUser.id;
+        }
     }
 
     function Logout() {
@@ -140,8 +151,10 @@ function NavbarComponent() {
                         >
                             <img className='dropdown-user-img' src={Profile} alt='Profile Image'/>
                             <div className='dropdown-user-details'>
-                                <div className='dropdown-user-details-name'>{currentUser ? currentUser.name : 'Testing'}</div>
-                                <div className='dropdown-user-details-email'>{currentUser ? currentUser.username : '00000000'}</div>
+                                <div className='dropdown-user-details-name'>{
+                                    currentUser?.name ?? 'Testing'
+                                }</div>
+                                <div className='dropdown-user-details-email'>{helper()}</div>
                             </div>
                         </Dropdown.Header>
                         <Dropdown.Divider/>

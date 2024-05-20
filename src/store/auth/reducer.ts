@@ -1,15 +1,19 @@
 import { AnyAction } from "redux";
-import { UserType } from "../user/types";
 import { login, logout, reducerError, reducerLoading } from "./action";
+import { TeacherType } from "../teacher/types";
+import { StudentType } from "../student/types";
+import { StaffType } from "../staff/types";
 
 export type AuthState = {
-    readonly auth: UserType | null;
+    readonly auth: TeacherType | StudentType | StaffType | null;
+    readonly role: string | null;
     readonly isLoading: boolean;
-    readonly error: Error | string | null;
+    readonly error: Error | null;
 }
 
 const AUTH_INITIAL_STATE: AuthState = {
     auth: null,
+    role: null,
     isLoading: false,
     error: null
 };
@@ -23,11 +27,11 @@ export default function authReducer(
     }
     
     if (login.match(action)) {
-        return {...state, isLoading: false, auth: action.payload, error: null};
+        return {...state, isLoading: false, auth: action.payload.user, role: action.payload.role, error: null};
     }
     
     if (logout.match(action)) {
-        return {...state, isLoading: false, auth: null, error: null};
+        return {...state, isLoading: false, auth: null, role: null, error: null};
     }
 
     if (reducerError.match(action)) {

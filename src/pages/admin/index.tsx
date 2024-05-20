@@ -1,25 +1,28 @@
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import { UserType } from "../../store/user/types";
 import { useSelector } from "react-redux";
-import { selectAuth } from "../../store/auth/selector";
+import { selectAuth, selectAuthRole } from "../../store/auth/selector";
 import LoadingComponent from "../../components/loading";
 import NavbarComponent from "../../components/navbar";
 import SidebarComponent from "../../components/sidebar";
 import SidebarItems from "./sidebar";
 import config from "../../config/config";
+import { StaffType } from "../../store/staff/types";
 
 function AdminLayout() {
-    const auth: UserType | null = useSelector(selectAuth);
+    const auth: StaffType = useSelector(selectAuth) as StaffType;
+    const role: string = useSelector(selectAuthRole) as string;
+    if (role !== 'Administrator') {
+        return <Navigate to={'/'} replace/>;
+    }
     if (!auth) { return <Navigate to={'/login'} replace/>; }
-    if (auth.role != 'Administrator') { return <Navigate to={`/${auth.role}`} replace/>;}
 
     return (
         <>
             <NavbarComponent/>
             <div id="layoutSidenav">
                 <div id="layoutSidenav_nav">
-                    <SidebarComponent items={<SidebarItems />} role={auth.role} />
+                    <SidebarComponent items={<SidebarItems />} role={role} />
                 </div>
                 <div id="layoutSidenav_content">
                     <React.Suspense fallback={<LoadingComponent />}>

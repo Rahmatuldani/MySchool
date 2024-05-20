@@ -1,27 +1,29 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, Card, Col, Container, Form, Row, Spinner } from "react-bootstrap";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { UserType } from "../../../../store/user/types";
 import { useDispatch, useSelector } from "react-redux";
-import { selectUsers, selectUsersIsLoading } from "../../../../store/user/selector";
 import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
-import { CreateUsersFunction } from "../../../../store/user/action";
 import Alert from "../../../../utils/alert";
 import { Dispatch } from "redux";
+import { TeacherType } from "../../../../store/teacher/types";
+import { selectTeachers, selectTeachersIsLoading } from "../../../../store/teacher/selector";
+import { TeacherFields } from "../../../../store/shared/type";
+import { CreateTeacherFunction } from "../../../../store/teacher/action";
 
-function UserForm() {
-    const users: UserType[] = useSelector(selectUsers);
-    let data: UserType | undefined = undefined;
+function TeacherAdd() {
+    const teachers: TeacherType[] = useSelector(selectTeachers);
+    let data: TeacherType | undefined = undefined;
     const { id } = useParams();
     if (id) {
-        data = users.find(user => user._id === id);
+        data = teachers.find(teacher => teacher._id === id);
     }
-    const loading: boolean = useSelector(selectUsersIsLoading);
+    const loading: boolean = useSelector(selectTeachersIsLoading);
     const navigate: NavigateFunction = useNavigate();
     const dispatch: Dispatch = useDispatch();
-    const { handleSubmit, control, formState: { errors } } = useForm<UserType>();
+    const { handleSubmit, control, formState: { errors } } = useForm<TeacherType>();
 
-    const FormSubmit: SubmitHandler<UserType> = (data) => {
-        CreateUsersFunction(dispatch, data)
+    const FormSubmit: SubmitHandler<TeacherType> = (data) => { 
+        CreateTeacherFunction(dispatch, data)
             .then(result => {
                 Alert({
                     title: 'Success',
@@ -29,7 +31,7 @@ function UserForm() {
                     icon: 'success'
                 }).then(result => {
                     if (result.isConfirmed) {
-                        navigate('/Administrator/users');
+                        navigate('/Administrator/teachers');
                     }
                 });
             })
@@ -42,6 +44,14 @@ function UserForm() {
             });
     };
 
+    function fieldDatalist() {
+        const list: any[] = [];
+        TeacherFields.forEach((field) => list.push(
+            <option key={field} value={field}/>
+        ));
+        return <datalist id='fieldList'>{list}</datalist>;
+    }
+
     return (
         <Container className='mt-n10'>
             <Card className='mb-4'>
@@ -51,18 +61,18 @@ function UserForm() {
                         <Row className='mb-3'>
                             <Controller
                                 control={control}
-                                name='username'
-                                defaultValue={data?.username ?? ''}
+                                name='nip'
+                                defaultValue={data?.nip ?? ''}
                                 rules={{
-                                    required: 'Username is required',
-                                    pattern: { value: /^\d+$/, message: 'Username must be a number' }
+                                    required: 'NIP is required',
+                                    pattern: { value: /^\d+$/, message: 'NIP must be a number' }
                                 }}
                                 
                                 render={({ field }) => (
-                                    <Form.Group as={Col} className='mb-2' controlId='inputUsername'>
-                                        <Form.Label className='small mb-1'>Username</Form.Label>
-                                        <Form.Control placeholder='Enter username' {...field} />
-                                        {errors.username && <span className='small text-danger'>{errors.username.message}</span>}
+                                    <Form.Group as={Col} className='mb-2' controlId='inputNip'>
+                                        <Form.Label className='small mb-1'>NIP</Form.Label>
+                                        <Form.Control placeholder='Enter NIP' {...field} />
+                                        {errors.nip && <span className='small text-danger'>{errors.nip.message}</span>}
                                     </Form.Group>
                                 )}
                             />
@@ -115,6 +125,24 @@ function UserForm() {
                             />
                             <Controller
                                 control={control}
+                                name='field'
+                                rules={{
+                                    required: 'Field is required',
+                                }}
+                                defaultValue={data?.field ?? ''}
+                                render={({ field }) => (
+                                    <Form.Group as={Col} className='mb-2' controlId='inputField'>
+                                        <Form.Label className='small mb-1'>Field</Form.Label>
+                                        <Form.Control list='fieldList' placeholder='Enter field' {...field} />
+                                        {fieldDatalist()}
+                                        {errors.field && <span className='small text-danger'>{errors.field.message}</span>}
+                                    </Form.Group>
+                                )}
+                            />
+                        </Row>
+                        <Row className='mb-3'>
+                            <Controller
+                                control={control}
                                 name='address'
                                 rules={{
                                     required: 'Address is required',
@@ -125,29 +153,6 @@ function UserForm() {
                                         <Form.Label className='small mb-1'>Address</Form.Label>
                                         <Form.Control placeholder='Enter address' {...field} />
                                         {errors.address && <span className='small text-danger'>{errors.address.message}</span>}
-                                    </Form.Group>
-                                )}
-                            />
-                        </Row>
-                        <Row className='mb-3'>
-                            <Controller
-                                control={control}
-                                name='role'
-                                rules={{
-                                    required: 'Role is required'
-                                }}
-                                defaultValue={data?.role ?? ''}
-                                render={({ field }) => (
-                                    <Form.Group as={Col} className='mb-2' controlId='inputRole'>
-                                        <Form.Label className='small mb-1'>Role</Form.Label>
-                                        <Form.Select aria-label='select-role' {...field}>
-                                            <option value='' disabled> -- Select Role -- </option>
-                                            <option value='Administrator'>Administrator</option>
-                                            <option value='Staff'>Staff</option>
-                                            <option value='Teacher'>Teacher</option>
-                                            <option value='Student'>Student</option>
-                                        </Form.Select>
-                                        {errors.role && <span className='small text-danger'>{errors.role.message}</span>}
                                     </Form.Group>
                                 )}
                             />
@@ -181,4 +186,4 @@ function UserForm() {
     );
 }
 
-export default UserForm;
+export default TeacherAdd;

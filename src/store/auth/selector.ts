@@ -8,6 +8,10 @@ export const selectAuth = createSelector(
     [selectAuthReducer],
     (authSlice) => authSlice.auth
 );
+export const selectAuthRole = createSelector(
+    [selectAuthReducer],
+    (authSlice) => authSlice.role
+);
 
 export const selectAuthIsLoading = createSelector(
     [selectAuthReducer],
